@@ -2,9 +2,9 @@
 #include "ExecStatus.h"
 
 // DECLARE_DELEGATE_OneParam(FDispatcherDelegate, const TArray< FString >&);
-FExecStatus FExecStatus::InvalidArgument = FExecStatus(FExecStatusType::Error, "Argument Invalid");
-FExecStatus FExecStatus::NotImplemented = FExecStatus(FExecStatusType::Error, "Not Implemented");
-FExecStatus FExecStatus::InvalidPointer = FExecStatus(FExecStatusType::Error, "Pointer to object invalid, check log for details");
+FExecStatus FExecStatus::InvalidArgument = FExecStatus(UnrealCV::FExecStatusType::Error, "Argument Invalid");
+FExecStatus FExecStatus::NotImplemented = FExecStatus(UnrealCV::FExecStatusType::Error, "Not Implemented");
+FExecStatus FExecStatus::InvalidPointer = FExecStatus(UnrealCV::FExecStatusType::Error, "Pointer to object invalid, check log for details");
 
 /** Begin of FPromise functions */
 
@@ -16,12 +16,12 @@ FExecStatus FPromise::CheckStatus()
 }
 
 /** Begin of FExecStatus functions */
-bool operator==(const FExecStatus& ExecStatus, const FExecStatusType& ExecStatusType)
+bool operator==(const FExecStatus& ExecStatus, const UnrealCV::FExecStatusType& ExecStatusType)
 {
 	return (ExecStatus.ExecStatusType == ExecStatusType);
 }
 
-bool operator!=(const FExecStatus& ExecStatus, const FExecStatusType& ExecStatusType)
+bool operator!=(const FExecStatus& ExecStatus, const UnrealCV::FExecStatusType& ExecStatusType)
 {
 	return (ExecStatus.ExecStatusType != ExecStatusType);
 }
@@ -36,13 +36,13 @@ FExecStatus& FExecStatus::operator+=(const FExecStatus& Src)
 
 FExecStatus FExecStatus::OK(FString InMessage)
 {
-	return FExecStatus(FExecStatusType::OK, InMessage);
+	return FExecStatus(UnrealCV::FExecStatusType::OK, InMessage);
 }
 
 
 FExecStatus FExecStatus::Error(FString ErrorMessage)
 {
-	return FExecStatus(FExecStatusType::Error, ErrorMessage);
+	return FExecStatus(UnrealCV::FExecStatusType::Error, ErrorMessage);
 }
 
 FString FExecStatus::GetMessage() const // Define how to format the reply string
@@ -50,12 +50,12 @@ FString FExecStatus::GetMessage() const // Define how to format the reply string
 	FString TypeName;
 	switch (ExecStatusType)
 	{
-	case FExecStatusType::OK:
+	case UnrealCV::FExecStatusType::OK:
 		if (MessageBody == "")
 			return "ok";
 		else
 			return MessageBody;
-	case FExecStatusType::Error:
+	case UnrealCV::FExecStatusType::Error:
 		TypeName = "error"; break;
 	default:
 		TypeName = "unknown FExecStatus Type";
@@ -64,13 +64,13 @@ FString FExecStatus::GetMessage() const // Define how to format the reply string
 	return Message;
 }
 
-FExecStatus::FExecStatus(FExecStatusType InExecStatusType, FPromise InPromise)
+FExecStatus::FExecStatus(UnrealCV::FExecStatusType InExecStatusType, FPromise InPromise)
 {
 	ExecStatusType = InExecStatusType;
 	Promise = InPromise;
 }
 
-FExecStatus::FExecStatus(FExecStatusType InExecStatusType, FString InMessage)
+FExecStatus::FExecStatus(UnrealCV::FExecStatusType InExecStatusType, FString InMessage)
 {
 	ExecStatusType = InExecStatusType;
 	MessageBody = InMessage;
@@ -82,10 +82,10 @@ FExecStatus::~FExecStatus()
 
 FExecStatus FExecStatus::Binary(TArray<uint8>& BinaryData)
 {
-	return FExecStatus(FExecStatusType::OK, BinaryData);
+	return FExecStatus(UnrealCV::FExecStatusType::OK, BinaryData);
 }
 
-FExecStatus::FExecStatus(FExecStatusType InExecStatusType, TArray<uint8>& InBinaryData)
+FExecStatus::FExecStatus(UnrealCV::FExecStatusType InExecStatusType, TArray<uint8>& InBinaryData)
 {
 	ExecStatusType = InExecStatusType;
 	BinaryData = InBinaryData;
@@ -101,17 +101,17 @@ TArray<uint8> FExecStatus::GetData() const // Define how to format the reply str
 	FString Message;
 	switch (ExecStatusType)
 	{
-	case FExecStatusType::OK:
+	case UnrealCV::FExecStatusType::OK:
 		if (MessageBody == "")
 			Message = "ok";
 		else
 			Message = MessageBody;
-	case FExecStatusType::Error:
+	case UnrealCV::FExecStatusType::Error:
 		TypeName = "error"; break;
 	default:
 		TypeName = "unknown FExecStatus Type";
 	}
-	if (ExecStatusType != FExecStatusType::OK)
+	if (ExecStatusType != UnrealCV::FExecStatusType::OK)
 	{
 		Message = FString::Printf(TEXT("%s %s"), *TypeName, *MessageBody);
 	}

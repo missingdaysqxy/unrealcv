@@ -31,11 +31,13 @@ public:
 	}
 };
 
-enum FExecStatusType
-{
-	OK,
-	Error,
-};
+namespace UnrealCV{
+	enum FExecStatusType
+	{
+		OK,
+		Error,
+	};
+}
 
 /**
  * Present the return value of a command. If the FExecStatusType is pending, check the promise value.
@@ -60,7 +62,7 @@ public:
 	/** The message body of this ExecStatus, the full message will also include the ExecStatusType */
 	FString MessageBody;
 	/** An enum type to show the ExecStatus */
-	FExecStatusType ExecStatusType;
+	UnrealCV::FExecStatusType ExecStatusType;
 
 	~FExecStatus();
 	/** Convert this ExecStatus to String */
@@ -80,14 +82,14 @@ public:
 private:
 	/** The promise to check result, only useful for async tasks */
 	FPromise Promise;
-	FExecStatus(FExecStatusType InExecStatusType, FString Message);
+	FExecStatus(UnrealCV::FExecStatusType InExecStatusType, FString Message);
 	// For query
-	FExecStatus(FExecStatusType InExecStatusType, FPromise Promise);
+	FExecStatus(UnrealCV::FExecStatusType InExecStatusType, FPromise Promise);
 	/** Construct from binary data */
-	FExecStatus(FExecStatusType InExecStatusType, TArray<uint8>& InBinaryData);
+	FExecStatus(UnrealCV::FExecStatusType InExecStatusType, TArray<uint8>& InBinaryData);
 	/** Binary data */
 	TArray<uint8> BinaryData;
 };
 
-bool operator==(const FExecStatus& ExecStatus, const FExecStatusType& ExecStatusEnum);
-bool operator!=(const FExecStatus& ExecStatus, const FExecStatusType& ExecStatusEnum);
+bool operator==(const FExecStatus& ExecStatus, const UnrealCV::FExecStatusType& ExecStatusEnum);
+bool operator!=(const FExecStatus& ExecStatus, const UnrealCV::FExecStatusType& ExecStatusEnum);
